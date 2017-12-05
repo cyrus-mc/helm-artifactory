@@ -1,0 +1,48 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "shortname" . }}
+  labels:
+    chart: {{ .Chart.Name }}
+    heritage: {{ .Release.Service | quote }}
+    release: {{ .Release.Name | quote }}
+    component: {{ template "fullname" . }}
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      component: {{ template "fullname" . }}
+  template:
+    metadata:
+      labels:
+        chart: {{ .Chart.Name }}
+        component: {{ template "fullname" . }}
+        heritage: {{ .Release.Service | quote }}
+        release: {{ .Release.Name | quote }}
+    spec:
+      containers:
+      - name: artifactory
+        image: {{ .Values.Image.Name }}:{{ .Values.Image.Tag }}
+        ports:
+        - containerPort: {{ .Values.Port.Container }}
+          name: http
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /var/opt/jfrog/artifactory
+          name: artifactory
+          readOnly: false
+      {{- if (not (empty .Values.Image.PullSecret)) }}
+      imagePullSecrets:
+      - name: {{ .Values.Image.PullSecret }}
+      {{- end }}
+      volumes:
+      - name: artifactory
+      {{- if .Values.Persistence.Enabled }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.Persistence.ExistingClaim | default (include "fullname" .) }}
+      {{- else }}
+        emptyDir: {}
+      {{- end }}
+

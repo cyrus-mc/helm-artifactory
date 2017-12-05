@@ -1,0 +1,38 @@
+# Default values for jenkins.
+# This is a YAML-formatted file.
+# Declare name/value pairs to be passed into your templates.
+# name: value
+
+Image:
+  Name: docker.bintray.io/jfrog/artifactory-pro
+  Tag: latest
+  #PullSecret: smarsh-kubernetes-pull-secret
+
+Service:
+  Type: ClusterIP
+
+Port:
+  Container: 8081
+  Service: 8081
+
+Persistence:
+  Enabled: false
+  #ExistingClaim:
+  ## A manually managed Persistent Volume and Claim
+  ## Requires Persistence.Enabled: true
+  ## If defined, PVC must be created manually before volume will be bound
+  # ExistingClaim:
+
+  ## If defined, volume.beta.kubernetes.io/storage-class: <StorageClass>
+  ## Default: volume.alpha.kubernetes.io/storage-class: default
+  ##
+  StorageClass: standard
+  AccessMode: ReadWriteOnce
+  Size: 50Gi
+  volumes:
+#  - name: nothing
+#    emptyDir: {}
+  mounts:
+#  - mountPath: /var/nothing
+#    name: nothing
+#    readOnly: true

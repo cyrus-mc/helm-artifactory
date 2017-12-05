@@ -1,0 +1,8 @@
+name: artifactory
+home: https://www.jfrog.com/artifactory
+version: 5.4.2
+description: JFrog Artifactory
+sources:
+  - https://bitbucket.org/datdevops/helm-artifactory
+maintainers:
+icon: http://blog.strive-ltd.com/wp-content/uploads/2016/03/artifactory.png
